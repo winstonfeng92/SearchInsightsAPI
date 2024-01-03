@@ -7,9 +7,8 @@ from utils import (
     filter_out_specific_links,
     get_unique_domains,
 )
-from .constants import (
-    FILTER_KEYWORDS,
-)  # Adjust the import path as per your project structure
+from constants import FILTER_KEYWORDS
+
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -39,7 +38,6 @@ def read_root():
 @app.post("/search")
 def search_and_filter(request: SearchRequest) -> dict:
     filter_keywords = FILTER_KEYWORDS.union({request.search_domain})
-
     try:
         # Get Organic Results
         organic_results = get_organic_results(
