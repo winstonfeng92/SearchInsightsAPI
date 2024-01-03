@@ -4,6 +4,8 @@
 
 SearchInsightsAPI is a FastAPI application designed to analyze and provide insights into online search results, specifically for restaurants. It systematically identifies online presences, tracks domain rankings, and helps in understanding online visibility for various restaurant businesses.
 
+This API exists to help systematically identify fractured online presence using automation.
+
 ## Features
 
 - **Search Query Processing**: Takes specific restaurant-related queries and location data to analyze search results.

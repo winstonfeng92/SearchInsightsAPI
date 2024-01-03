@@ -7,6 +7,10 @@ from utils import (
     filter_out_specific_links,
     get_unique_domains,
 )
+from .constants import (
+    FILTER_KEYWORDS,
+)  # Adjust the import path as per your project structure
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -34,76 +38,7 @@ def read_root():
 
 @app.post("/search")
 def search_and_filter(request: SearchRequest) -> dict:
-    filter_keywords = {
-        "facebook",
-        "slicelife",
-        "grubhub",
-        "doordash",
-        "yelp",
-        "menupages",
-        "tripadvisor",
-        "restaurantguru",
-        "restaurantji",
-        "checkle",
-        "instagram",
-        "theinfatuation",
-        "foodnetwork",
-        "foursquare",
-        "singleplatform",
-        "twodaysinsanfrancisco",
-        "opentable",
-        "sirved",
-        "allmenus",
-        "seamless",
-        "postmates",
-        "ubereats",
-        "mapquest",
-        "yellowpages",
-        "zomato",
-        "menupix",
-        "order.online",
-        "delivery",
-        "eat24hours",
-        "beyondmenu",
-        "twitter",
-        "linkedin",
-        "gotruckster",
-        "onebite",
-        "wikipedia",
-        "tiktok",
-        "keyt",
-        "explorelompoc",
-        "wichitabyeb",
-        "sandiegoreader",
-        "masslive",
-        "northcoastjournal",
-        "dailygazette",
-        "nextdoor",
-        "visitlakecounty",
-        "downtowncampbell",
-        "westword",
-        "latinrestaurantweeks",
-        "doorcountypulse",
-        "sturgeonbayfarmersmarket",
-        "visitfrisco",
-        "visitbartlesville",
-        "visitstpeteclearwater",
-        "reddit",
-        "visittucson",
-        "tucsonfoodie",
-        "azcentral",
-        "tucsonweekly",
-        "times",
-        "journal",
-        "youtube",
-        "pulse",
-        "toasttab",
-        "ios",
-        "gazette",
-        "reader",
-        "magazine",
-        request.search_domain,
-    }
+    filter_keywords = FILTER_KEYWORDS.union({request.search_domain})
 
     try:
         # Get Organic Results
