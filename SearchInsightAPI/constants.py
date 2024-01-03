@@ -16,6 +16,7 @@ FILTER_KEYWORDS = {
     "singleplatform",
     "twodaysinsanfrancisco",
     "opentable",
+    "resy",
     "sirved",
     "allmenus",
     "seamless",

@@ -6,6 +6,8 @@ from utils import (
     find_link_and_preceding_links,
     filter_out_specific_links,
     get_unique_domains,
+    create_word_set,
+    filter_websites,
 )
 from constants import FILTER_KEYWORDS
 
@@ -38,8 +40,9 @@ def read_root():
 @app.post("/search")
 def search_and_filter(request: SearchRequest) -> dict:
     filter_keywords = FILTER_KEYWORDS.union({request.search_domain})
+    query_filter_keywords = create_word_set(request.query)
+
     try:
-        # Get Organic Results
         organic_results = get_organic_results(
             request.location, request.query, request.api_key
         )
@@ -53,17 +56,23 @@ def search_and_filter(request: SearchRequest) -> dict:
         filtered_preceding_links = filter_out_specific_links(
             preceding_links, filter_keywords
         )
+
+        # get unique domains, filter out uber
         filtered_links = get_unique_domains(
             filter_out_specific_links(organic_results, filter_keywords)
         )
 
-        # Structuring the response
+        # perform additional filtering based on query keywords
+        query_filtered_links = filter_websites(
+            query_filter_keywords, list(filtered_links)
+        )
+
         response = {
-            "domain_position": index
+            "domain_position": index + 1
             if index != -1
-            else "Domain not found within the first page (8 links)",
+            else "Domain not found within the first page (first 8 links)",
             "links_before_searched_domain": preceding_links if index != -1 else [],
-            "potential_fractured_presence": list(filtered_links),
+            "potential_fractured_presence": query_filtered_links,
             "links_preceding_owner_site": preceding_links,
             "all_links_first_page": organic_results,
         }

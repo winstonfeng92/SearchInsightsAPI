@@ -1,16 +1,12 @@
 from typing import List, Set, Tuple
 from serpapi import GoogleSearch
 from urllib.parse import urlparse
+import re
 
 
 def get_organic_results(location: str, query: str, key: str) -> List[str]:
     """
     Retrieves the organic search results for a given query and location.
-
-    :param location: The location to consider for the search.
-    :param query: The search query.
-    :param key: The API key for SerpApi.
-    :return: A list of links from the organic search results.
     """
     params = {
         "q": query,
@@ -35,13 +31,7 @@ def find_link_and_preceding_links(
     """
     Searches the array for a specific domain and returns its position in the array,
     along with a list of links that come before it.
-
-    :param links: A list of URLs (strings).
-    :param search_domain: The domain (string) to search for in the list of URLs.
-    :return: A tuple containing the index of the found domain and a list of URLs preceding it.
-             Returns (-1, []) if the domain is not found.
     """
-    # Find the index of the link that matches the search domain
     for index, link in enumerate(links):
         parsed_url = urlparse(link)
         if search_domain == parsed_url.netloc:
@@ -64,10 +54,6 @@ def get_unique_domains(urls: List[str]) -> Set[str]:
 def filter_out_specific_links(links: List[str], filter_keywords: Set[str]) -> List[str]:
     """
     Filters out links that contain any of the specified keywords.
-
-    :param links: A list of URLs (strings).
-    :param filter_keywords: A set of keywords (strings) to filter out from the URLs.
-    :return: A list of URLs that do not contain the specified keywords.
     """
     filteringLink = [
         link
@@ -75,3 +61,22 @@ def filter_out_specific_links(links: List[str], filter_keywords: Set[str]) -> Li
         if not any(keyword in link for keyword in filter_keywords)
     ]
     return filteringLink
+
+
+def create_word_set(input_string):
+    # Remove special characters
+    cleaned_string = re.sub(r"[^\w\s]", "", input_string)
+
+    # split
+    words = cleaned_string.lower().split()
+    word_set = {word for word in words if len(word) >= 3}
+
+    return word_set
+
+
+def filter_websites(words_set, websites):
+    # Filter websites containing at least one word from the words_set
+    filtered_websites = [
+        site for site in websites if any(word in site for word in words_set)
+    ]
+    return filtered_websites
